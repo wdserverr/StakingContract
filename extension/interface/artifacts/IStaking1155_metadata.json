@@ -1,0 +1,342 @@
+{
+	"compiler": {
+		"version": "0.8.11+commit.d7f03943"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "staker",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "rewardAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "RewardsClaimed",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "staker",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "TokensStaked",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "staker",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "TokensWithdrawn",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "oldRewardsPerUnitTime",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newRewardsPerUnitTime",
+						"type": "uint256"
+					}
+				],
+				"name": "UpdatedDefaultRewardsPerUnitTime",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "oldTimeUnit",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newTimeUnit",
+						"type": "uint256"
+					}
+				],
+				"name": "UpdatedDefaultTimeUnit",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "_tokenId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "oldRewardsPerUnitTime",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newRewardsPerUnitTime",
+						"type": "uint256"
+					}
+				],
+				"name": "UpdatedRewardsPerUnitTime",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "_tokenId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "oldTimeUnit",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newTimeUnit",
+						"type": "uint256"
+					}
+				],
+				"name": "UpdatedTimeUnit",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					}
+				],
+				"name": "claimRewards",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "staker",
+						"type": "address"
+					}
+				],
+				"name": "getStakeInfoForToken",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "_tokensStaked",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_rewards",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "stake",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "withdraw",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"author": "thirdweb",
+			"events": {
+				"RewardsClaimed(address,uint256)": {
+					"details": "Emitted when a staker claims staking rewards."
+				},
+				"TokensStaked(address,uint256,uint256)": {
+					"details": "Emitted when tokens are staked."
+				},
+				"TokensWithdrawn(address,uint256,uint256)": {
+					"details": "Emitted when a set of staked token-ids are withdrawn."
+				},
+				"UpdatedDefaultRewardsPerUnitTime(uint256,uint256)": {
+					"details": "Emitted when contract admin updates rewardsPerUnitTime."
+				},
+				"UpdatedDefaultTimeUnit(uint256,uint256)": {
+					"details": "Emitted when contract admin updates timeUnit."
+				},
+				"UpdatedRewardsPerUnitTime(uint256,uint256,uint256)": {
+					"details": "Emitted when contract admin updates rewardsPerUnitTime."
+				},
+				"UpdatedTimeUnit(uint256,uint256,uint256)": {
+					"details": "Emitted when contract admin updates timeUnit."
+				}
+			},
+			"kind": "dev",
+			"methods": {
+				"claimRewards(uint256)": {
+					"params": {
+						"tokenId": "Staked token Id."
+					}
+				},
+				"getStakeInfoForToken(uint256,address)": {
+					"params": {
+						"staker": "Address for which to calculated rewards.",
+						"tokenId": "Staked token Id."
+					}
+				},
+				"stake(uint256,uint256)": {
+					"params": {
+						"amount": "Amount to stake.",
+						"tokenId": "ERC1155 token-id to stake."
+					}
+				},
+				"withdraw(uint256,uint256)": {
+					"params": {
+						"amount": "Amount to withdraw.",
+						"tokenId": "ERC1155 token-id to withdraw."
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"claimRewards(uint256)": {
+					"notice": "Claim accumulated rewards."
+				},
+				"getStakeInfoForToken(uint256,address)": {
+					"notice": "View amount staked and total rewards for a user."
+				},
+				"stake(uint256,uint256)": {
+					"notice": "Stake ERC721 Tokens."
+				},
+				"withdraw(uint256,uint256)": {
+					"notice": "Withdraw staked tokens."
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"extension/interface/IStaking1155.sol": "IStaking1155"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"extension/interface/IStaking1155.sol": {
+			"keccak256": "0xc49b27785abc8178cc419e9fe529380dab3b7ca331aac13ca3a96ff83259766d",
+			"license": "Apache-2.0",
+			"urls": [
+				"bzz-raw://760b8a20409279326be01e646ca90c2d8400ce7c1050b3c8d613f9246995e1c9",
+				"dweb:/ipfs/QmQuvw1pAvDMucefJYifjFzfqPs8qcV8AiKSZTgBmAywne"
+			]
+		}
+	},
+	"version": 1
+}

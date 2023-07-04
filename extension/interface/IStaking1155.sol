@@ -54,17 +54,18 @@ interface IStaking1155 {
         uint256 stakeEndTime;
     }
 
-    function getStakeInfo(address staker)
-        external
-        view
-        returns (
-            uint256[] memory _tokensStaked,
-            uint256[] memory _tokenAmounts,
-            uint256[] memory _stakeTime,
-            uint256[] memory _stakeEndTime,
-            uint256[] memory _maxRewards,
-            uint256 _totalRewards
-        );
+    // function getStakeInfo(address staker)
+    //     external
+    //     view
+    //     returns (
+    //         uint256[] memory _tokensStaked,
+    //         uint256[] memory _tokenAmounts,
+    //         uint256[] memory _stakeTime,
+    //         uint256[] memory _stakeEndTime,
+    //         uint256[] memory _maxRewards,
+    //         uint256[] memory _currentRewards,
+    //         uint256 _totalRewards
+    //     );
     /**
      *  @notice Staking Condition.
      *

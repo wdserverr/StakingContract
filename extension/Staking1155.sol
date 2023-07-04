@@ -143,7 +143,7 @@ abstract contract Staking1155 is ReentrancyGuard, IStaking1155 {
         _rewards = _availableRewards(_tokenId, _staker);
     }
 
-    function getStakeInfo(address _staker)
+    function getUserInfo(address _staker)
         external
         view
         virtual
@@ -153,6 +153,7 @@ abstract contract Staking1155 is ReentrancyGuard, IStaking1155 {
             uint256[] memory _stakeTime,
             uint256[] memory _stakeEndTime,
             uint256[] memory _maxRewards,
+            uint256[] memory _currentRewards,
             uint256 _totalRewards
         )
     {
@@ -167,6 +168,7 @@ abstract contract Staking1155 is ReentrancyGuard, IStaking1155 {
             if (_stakedAmounts[i] > 0) stakerTokenCount += 1;
         }
 
+        _currentRewards = new uint256[](stakerTokenCount);
         _tokensStaked = new uint256[](stakerTokenCount);
         _tokenAmounts = new uint256[](stakerTokenCount);
         _stakeTime = new uint256[](stakerTokenCount);
@@ -176,13 +178,13 @@ abstract contract Staking1155 is ReentrancyGuard, IStaking1155 {
         uint256 count = 0;
         for (uint256 i = 0; i < indexedTokenCount; i++) {
             if (_stakedAmounts[i] > 0) {
-                StakerTiers storage staker = stakerTiers[count][_staker];
                 _tokensStaked[count] = _indexedTokens[i];
                 _tokenAmounts[count] = _stakedAmounts[i];
+                _currentRewards[count] = _availableRewards(_indexedTokens[i], _staker);
                 _totalRewards += _availableRewards(_indexedTokens[i], _staker);
-                _stakeTime[count] = staker.stakeTime;
-                _stakeEndTime[count] = staker.stakeEndTime;
-                _maxRewards[count] = staker.maxRewards;
+                _stakeTime[count] = stakerTiers[_indexedTokens[i]][_staker].stakeTime;
+                _stakeEndTime[count] = stakerTiers[_indexedTokens[i]][_staker].stakeEndTime;
+                _maxRewards[count] = stakerTiers[_indexedTokens[i]][_staker].maxRewards;
                 count += 1;
             }
         }
@@ -281,8 +283,7 @@ abstract contract Staking1155 is ReentrancyGuard, IStaking1155 {
 
     /// @dev Withdraw logic. Override to add custom logic.
     function _withdraw(uint256 _tokenId, uint256 _amount) internal virtual {
-        uint256 _amountStaked = stakers[_tokenId][_stakeMsgSender()]
-            .amountStaked;
+        uint256 _amountStaked = stakers[_tokenId][_stakeMsgSender()].amountStaked;
         require(_amount != 0, "Withdrawing 0 tokens");
         require(_amountStaked >= _amount, "Withdrawing more than staked");
         StakerTiers storage staker = stakerTiers[_tokenId][_stakeMsgSender()];
@@ -325,18 +326,11 @@ abstract contract Staking1155 is ReentrancyGuard, IStaking1155 {
             ? nextDefaultConditionId - 1
             : _conditionId - 1;
 
-        if (rewards == stakerTiers[_tokenId][_stakeMsgSender()].maxRewards) {
-            _withdraw(
-                _tokenId,
-                stakers[_tokenId][_stakeMsgSender()].amountStaked
-            );
+        if (rewards < stakerTiers[_tokenId][_stakeMsgSender()].maxRewards) {
+            stakerTiers[_tokenId][_stakeMsgSender()].maxRewards -= rewards;
             _mintRewards(_stakeMsgSender(), rewards);
-        } else if (
-            rewards <= stakerTiers[_tokenId][_stakeMsgSender()].maxRewards
-        ) {
-            stakerTiers[_tokenId][_stakeMsgSender()].maxRewards =
-                stakerTiers[_tokenId][_stakeMsgSender()].maxRewards -
-                rewards;
+        } else {
+            _withdraw(_tokenId, stakers[_tokenId][_stakeMsgSender()].amountStaked);
             _mintRewards(_stakeMsgSender(), rewards);
         }
 

@@ -1,0 +1,1840 @@
+{
+	"id": "f4a9a56cd3c19d5187929d6c538261a4",
+	"_format": "hh-sol-build-info-1",
+	"solcVersion": "0.8.11",
+	"solcLongVersion": "0.8.11+commit.d7f03943",
+	"input": {
+		"language": "Solidity",
+		"sources": {
+			"extension/interface/IStaking1155.sol": {
+				"content": "// SPDX-License-Identifier: Apache-2.0\npragma solidity ^0.8.11;\n\n/// @author thirdweb\n\ninterface IStaking1155 {\n    /// @dev Emitted when tokens are staked.\n    event TokensStaked(address indexed staker, uint256 indexed tokenId, uint256 amount);\n\n    /// @dev Emitted when a set of staked token-ids are withdrawn.\n    event TokensWithdrawn(address indexed staker, uint256 indexed tokenId, uint256 amount);\n\n    /// @dev Emitted when a staker claims staking rewards.\n    event RewardsClaimed(address indexed staker, uint256 rewardAmount);\n\n    /// @dev Emitted when contract admin updates timeUnit.\n    event UpdatedTimeUnit(uint256 indexed _tokenId, uint256 oldTimeUnit, uint256 newTimeUnit);\n\n    /// @dev Emitted when contract admin updates rewardsPerUnitTime.\n    event UpdatedRewardsPerUnitTime(\n        uint256 indexed _tokenId,\n        uint256 oldRewardsPerUnitTime,\n        uint256 newRewardsPerUnitTime\n    );\n\n    /// @dev Emitted when contract admin updates timeUnit.\n    event UpdatedDefaultTimeUnit(uint256 oldTimeUnit, uint256 newTimeUnit);\n\n    /// @dev Emitted when contract admin updates rewardsPerUnitTime.\n    event UpdatedDefaultRewardsPerUnitTime(uint256 oldRewardsPerUnitTime, uint256 newRewardsPerUnitTime);\n\n    /**\n     *  @notice Staker Info.\n     *\n     *  @param amountStaked             Total number of tokens staked by the staker.\n     *\n     *  @param timeOfLastUpdate         Last reward-update timestamp.\n     *\n     *  @param unclaimedRewards         Rewards accumulated but not claimed by user yet.\n     *\n     *  @param conditionIdOflastUpdate  Condition-Id when rewards were last updated for user.\n     */\n    struct Staker {\n        uint256 amountStaked;\n        uint256 timeOfLastUpdate;\n        uint256 unclaimedRewards;\n        uint256 conditionIdOflastUpdate;\n    }\n    \n    struct StakerTiers {\n        uint256 maxRewards;\n        uint256 amountStaked;\n        uint256 stakeTime;\n        uint256 stakeEndTime;\n    }\n\n    // function getStakeInfo(address staker)\n    //     external\n    //     view\n    //     returns (\n    //         uint256[] memory _tokensStaked,\n    //         uint256[] memory _tokenAmounts,\n    //         uint256[] memory _stakeTime,\n    //         uint256[] memory _stakeEndTime,\n    //         uint256[] memory _maxRewards,\n    //         uint256 _totalRewards\n    //     );\n    /**\n     *  @notice Staking Condition.\n     *\n     *  @param timeUnit           Unit of time specified in number of seconds. Can be set as 1 seconds, 1 days, 1 hours, etc.\n     *\n     *  @param rewardsPerUnitTime Rewards accumulated per unit of time.\n     *\n     *  @param startTimestamp     Condition start timestamp.\n     *\n     *  @param endTimestamp       Condition end timestamp.\n     */\n    struct StakingCondition {\n        uint256 timeUnit;\n        uint256 rewardsPerUnitTime;\n        uint256 startTimestamp;\n        uint256 endTimestamp;\n    }\n\n    /**\n     *  @notice Stake ERC721 Tokens.\n     *\n     *  @param tokenId   ERC1155 token-id to stake.\n     *  @param amount    Amount to stake.\n     */\n    function stake(uint256 tokenId, uint256 amount) external;\n\n    /**\n     *  @notice Withdraw staked tokens.\n     *\n     *  @param tokenId   ERC1155 token-id to withdraw.\n     *  @param amount    Amount to withdraw.\n     */\n    function withdraw(uint256 tokenId, uint256 amount) external;\n\n    /**\n     *  @notice Claim accumulated rewards.\n     *\n     *  @param tokenId   Staked token Id.\n     */\n    function claimRewards(uint256 tokenId) external;\n\n    /**\n     *  @notice View amount staked and total rewards for a user.\n     *\n     *  @param tokenId   Staked token Id.\n     *  @param staker    Address for which to calculated rewards.\n     */\n    function getStakeInfoForToken(uint256 tokenId, address staker)\n        external\n        view\n        returns (uint256 _tokensStaked, uint256 _rewards);\n}\n"
+			}
+		},
+		"settings": {
+			"optimizer": {
+				"enabled": true,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"": [
+						"ast"
+					],
+					"*": [
+						"abi",
+						"metadata",
+						"devdoc",
+						"userdoc",
+						"storageLayout",
+						"evm.legacyAssembly",
+						"evm.bytecode",
+						"evm.deployedBytecode",
+						"evm.methodIdentifiers",
+						"evm.gasEstimates",
+						"evm.assembly"
+					]
+				}
+			}
+		}
+	},
+	"output": {
+		"contracts": {
+			"extension/interface/IStaking1155.sol": {
+				"IStaking1155": {
+					"abi": [
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": true,
+									"internalType": "address",
+									"name": "staker",
+									"type": "address"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "rewardAmount",
+									"type": "uint256"
+								}
+							],
+							"name": "RewardsClaimed",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": true,
+									"internalType": "address",
+									"name": "staker",
+									"type": "address"
+								},
+								{
+									"indexed": true,
+									"internalType": "uint256",
+									"name": "tokenId",
+									"type": "uint256"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "amount",
+									"type": "uint256"
+								}
+							],
+							"name": "TokensStaked",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": true,
+									"internalType": "address",
+									"name": "staker",
+									"type": "address"
+								},
+								{
+									"indexed": true,
+									"internalType": "uint256",
+									"name": "tokenId",
+									"type": "uint256"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "amount",
+									"type": "uint256"
+								}
+							],
+							"name": "TokensWithdrawn",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "oldRewardsPerUnitTime",
+									"type": "uint256"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "newRewardsPerUnitTime",
+									"type": "uint256"
+								}
+							],
+							"name": "UpdatedDefaultRewardsPerUnitTime",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "oldTimeUnit",
+									"type": "uint256"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "newTimeUnit",
+									"type": "uint256"
+								}
+							],
+							"name": "UpdatedDefaultTimeUnit",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": true,
+									"internalType": "uint256",
+									"name": "_tokenId",
+									"type": "uint256"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "oldRewardsPerUnitTime",
+									"type": "uint256"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "newRewardsPerUnitTime",
+									"type": "uint256"
+								}
+							],
+							"name": "UpdatedRewardsPerUnitTime",
+							"type": "event"
+						},
+						{
+							"anonymous": false,
+							"inputs": [
+								{
+									"indexed": true,
+									"internalType": "uint256",
+									"name": "_tokenId",
+									"type": "uint256"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "oldTimeUnit",
+									"type": "uint256"
+								},
+								{
+									"indexed": false,
+									"internalType": "uint256",
+									"name": "newTimeUnit",
+									"type": "uint256"
+								}
+							],
+							"name": "UpdatedTimeUnit",
+							"type": "event"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "tokenId",
+									"type": "uint256"
+								}
+							],
+							"name": "claimRewards",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "tokenId",
+									"type": "uint256"
+								},
+								{
+									"internalType": "address",
+									"name": "staker",
+									"type": "address"
+								}
+							],
+							"name": "getStakeInfoForToken",
+							"outputs": [
+								{
+									"internalType": "uint256",
+									"name": "_tokensStaked",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "_rewards",
+									"type": "uint256"
+								}
+							],
+							"stateMutability": "view",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "tokenId",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "amount",
+									"type": "uint256"
+								}
+							],
+							"name": "stake",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "tokenId",
+									"type": "uint256"
+								},
+								{
+									"internalType": "uint256",
+									"name": "amount",
+									"type": "uint256"
+								}
+							],
+							"name": "withdraw",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						}
+					],
+					"devdoc": {
+						"author": "thirdweb",
+						"events": {
+							"RewardsClaimed(address,uint256)": {
+								"details": "Emitted when a staker claims staking rewards."
+							},
+							"TokensStaked(address,uint256,uint256)": {
+								"details": "Emitted when tokens are staked."
+							},
+							"TokensWithdrawn(address,uint256,uint256)": {
+								"details": "Emitted when a set of staked token-ids are withdrawn."
+							},
+							"UpdatedDefaultRewardsPerUnitTime(uint256,uint256)": {
+								"details": "Emitted when contract admin updates rewardsPerUnitTime."
+							},
+							"UpdatedDefaultTimeUnit(uint256,uint256)": {
+								"details": "Emitted when contract admin updates timeUnit."
+							},
+							"UpdatedRewardsPerUnitTime(uint256,uint256,uint256)": {
+								"details": "Emitted when contract admin updates rewardsPerUnitTime."
+							},
+							"UpdatedTimeUnit(uint256,uint256,uint256)": {
+								"details": "Emitted when contract admin updates timeUnit."
+							}
+						},
+						"kind": "dev",
+						"methods": {
+							"claimRewards(uint256)": {
+								"params": {
+									"tokenId": "Staked token Id."
+								}
+							},
+							"getStakeInfoForToken(uint256,address)": {
+								"params": {
+									"staker": "Address for which to calculated rewards.",
+									"tokenId": "Staked token Id."
+								}
+							},
+							"stake(uint256,uint256)": {
+								"params": {
+									"amount": "Amount to stake.",
+									"tokenId": "ERC1155 token-id to stake."
+								}
+							},
+							"withdraw(uint256,uint256)": {
+								"params": {
+									"amount": "Amount to withdraw.",
+									"tokenId": "ERC1155 token-id to withdraw."
+								}
+							}
+						},
+						"version": 1
+					},
+					"evm": {
+						"assembly": "",
+						"bytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"deployedBytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"immutableReferences": {},
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"gasEstimates": null,
+						"legacyAssembly": null,
+						"methodIdentifiers": {
+							"claimRewards(uint256)": "0962ef79",
+							"getStakeInfoForToken(uint256,address)": "168fb5c5",
+							"stake(uint256,uint256)": "7b0472f0",
+							"withdraw(uint256,uint256)": "441a3e70"
+						}
+					},
+					"metadata": "{\"compiler\":{\"version\":\"0.8.11+commit.d7f03943\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"staker\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"rewardAmount\",\"type\":\"uint256\"}],\"name\":\"RewardsClaimed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"staker\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"TokensStaked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"staker\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"TokensWithdrawn\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"oldRewardsPerUnitTime\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newRewardsPerUnitTime\",\"type\":\"uint256\"}],\"name\":\"UpdatedDefaultRewardsPerUnitTime\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"oldTimeUnit\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newTimeUnit\",\"type\":\"uint256\"}],\"name\":\"UpdatedDefaultTimeUnit\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"oldRewardsPerUnitTime\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newRewardsPerUnitTime\",\"type\":\"uint256\"}],\"name\":\"UpdatedRewardsPerUnitTime\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"_tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"oldTimeUnit\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newTimeUnit\",\"type\":\"uint256\"}],\"name\":\"UpdatedTimeUnit\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"claimRewards\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"staker\",\"type\":\"address\"}],\"name\":\"getStakeInfoForToken\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_tokensStaked\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_rewards\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"stake\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"withdraw\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"author\":\"thirdweb\",\"events\":{\"RewardsClaimed(address,uint256)\":{\"details\":\"Emitted when a staker claims staking rewards.\"},\"TokensStaked(address,uint256,uint256)\":{\"details\":\"Emitted when tokens are staked.\"},\"TokensWithdrawn(address,uint256,uint256)\":{\"details\":\"Emitted when a set of staked token-ids are withdrawn.\"},\"UpdatedDefaultRewardsPerUnitTime(uint256,uint256)\":{\"details\":\"Emitted when contract admin updates rewardsPerUnitTime.\"},\"UpdatedDefaultTimeUnit(uint256,uint256)\":{\"details\":\"Emitted when contract admin updates timeUnit.\"},\"UpdatedRewardsPerUnitTime(uint256,uint256,uint256)\":{\"details\":\"Emitted when contract admin updates rewardsPerUnitTime.\"},\"UpdatedTimeUnit(uint256,uint256,uint256)\":{\"details\":\"Emitted when contract admin updates timeUnit.\"}},\"kind\":\"dev\",\"methods\":{\"claimRewards(uint256)\":{\"params\":{\"tokenId\":\"Staked token Id.\"}},\"getStakeInfoForToken(uint256,address)\":{\"params\":{\"staker\":\"Address for which to calculated rewards.\",\"tokenId\":\"Staked token Id.\"}},\"stake(uint256,uint256)\":{\"params\":{\"amount\":\"Amount to stake.\",\"tokenId\":\"ERC1155 token-id to stake.\"}},\"withdraw(uint256,uint256)\":{\"params\":{\"amount\":\"Amount to withdraw.\",\"tokenId\":\"ERC1155 token-id to withdraw.\"}}},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{\"claimRewards(uint256)\":{\"notice\":\"Claim accumulated rewards.\"},\"getStakeInfoForToken(uint256,address)\":{\"notice\":\"View amount staked and total rewards for a user.\"},\"stake(uint256,uint256)\":{\"notice\":\"Stake ERC721 Tokens.\"},\"withdraw(uint256,uint256)\":{\"notice\":\"Withdraw staked tokens.\"}},\"version\":1}},\"settings\":{\"compilationTarget\":{\"extension/interface/IStaking1155.sol\":\"IStaking1155\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"extension/interface/IStaking1155.sol\":{\"keccak256\":\"0xc49b27785abc8178cc419e9fe529380dab3b7ca331aac13ca3a96ff83259766d\",\"license\":\"Apache-2.0\",\"urls\":[\"bzz-raw://760b8a20409279326be01e646ca90c2d8400ce7c1050b3c8d613f9246995e1c9\",\"dweb:/ipfs/QmQuvw1pAvDMucefJYifjFzfqPs8qcV8AiKSZTgBmAywne\"]}},\"version\":1}",
+					"storageLayout": {
+						"storage": [],
+						"types": null
+					},
+					"userdoc": {
+						"kind": "user",
+						"methods": {
+							"claimRewards(uint256)": {
+								"notice": "Claim accumulated rewards."
+							},
+							"getStakeInfoForToken(uint256,address)": {
+								"notice": "View amount staked and total rewards for a user."
+							},
+							"stake(uint256,uint256)": {
+								"notice": "Stake ERC721 Tokens."
+							},
+							"withdraw(uint256,uint256)": {
+								"notice": "Withdraw staked tokens."
+							}
+						},
+						"version": 1
+					}
+				}
+			}
+		},
+		"sources": {
+			"extension/interface/IStaking1155.sol": {
+				"ast": {
+					"absolutePath": "extension/interface/IStaking1155.sol",
+					"exportedSymbols": {
+						"IStaking1155": [
+							121
+						]
+					},
+					"id": 122,
+					"license": "Apache-2.0",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 1,
+							"literals": [
+								"solidity",
+								"^",
+								"0.8",
+								".11"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "39:24:0"
+						},
+						{
+							"abstract": false,
+							"baseContracts": [],
+							"canonicalName": "IStaking1155",
+							"contractDependencies": [],
+							"contractKind": "interface",
+							"documentation": {
+								"id": 2,
+								"nodeType": "StructuredDocumentation",
+								"src": "65:21:0",
+								"text": "@author thirdweb"
+							},
+							"fullyImplemented": false,
+							"id": 121,
+							"linearizedBaseContracts": [
+								121
+							],
+							"name": "IStaking1155",
+							"nameLocation": "97:12:0",
+							"nodeType": "ContractDefinition",
+							"nodes": [
+								{
+									"anonymous": false,
+									"documentation": {
+										"id": 3,
+										"nodeType": "StructuredDocumentation",
+										"src": "116:40:0",
+										"text": "@dev Emitted when tokens are staked."
+									},
+									"id": 11,
+									"name": "TokensStaked",
+									"nameLocation": "167:12:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 10,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 5,
+												"indexed": true,
+												"mutability": "mutable",
+												"name": "staker",
+												"nameLocation": "196:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 11,
+												"src": "180:22:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 4,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "180:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 7,
+												"indexed": true,
+												"mutability": "mutable",
+												"name": "tokenId",
+												"nameLocation": "220:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 11,
+												"src": "204:23:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 6,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "204:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 9,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "amount",
+												"nameLocation": "237:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 11,
+												"src": "229:14:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 8,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "229:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "179:65:0"
+									},
+									"src": "161:84:0"
+								},
+								{
+									"anonymous": false,
+									"documentation": {
+										"id": 12,
+										"nodeType": "StructuredDocumentation",
+										"src": "251:62:0",
+										"text": "@dev Emitted when a set of staked token-ids are withdrawn."
+									},
+									"id": 20,
+									"name": "TokensWithdrawn",
+									"nameLocation": "324:15:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 19,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 14,
+												"indexed": true,
+												"mutability": "mutable",
+												"name": "staker",
+												"nameLocation": "356:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 20,
+												"src": "340:22:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 13,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "340:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 16,
+												"indexed": true,
+												"mutability": "mutable",
+												"name": "tokenId",
+												"nameLocation": "380:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 20,
+												"src": "364:23:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 15,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "364:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 18,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "amount",
+												"nameLocation": "397:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 20,
+												"src": "389:14:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 17,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "389:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "339:65:0"
+									},
+									"src": "318:87:0"
+								},
+								{
+									"anonymous": false,
+									"documentation": {
+										"id": 21,
+										"nodeType": "StructuredDocumentation",
+										"src": "411:54:0",
+										"text": "@dev Emitted when a staker claims staking rewards."
+									},
+									"id": 27,
+									"name": "RewardsClaimed",
+									"nameLocation": "476:14:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 26,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 23,
+												"indexed": true,
+												"mutability": "mutable",
+												"name": "staker",
+												"nameLocation": "507:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 27,
+												"src": "491:22:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 22,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "491:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 25,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "rewardAmount",
+												"nameLocation": "523:12:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 27,
+												"src": "515:20:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 24,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "515:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "490:46:0"
+									},
+									"src": "470:67:0"
+								},
+								{
+									"anonymous": false,
+									"documentation": {
+										"id": 28,
+										"nodeType": "StructuredDocumentation",
+										"src": "543:54:0",
+										"text": "@dev Emitted when contract admin updates timeUnit."
+									},
+									"id": 36,
+									"name": "UpdatedTimeUnit",
+									"nameLocation": "608:15:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 35,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 30,
+												"indexed": true,
+												"mutability": "mutable",
+												"name": "_tokenId",
+												"nameLocation": "640:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 36,
+												"src": "624:24:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 29,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "624:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 32,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "oldTimeUnit",
+												"nameLocation": "658:11:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 36,
+												"src": "650:19:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 31,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "650:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 34,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "newTimeUnit",
+												"nameLocation": "679:11:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 36,
+												"src": "671:19:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 33,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "671:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "623:68:0"
+									},
+									"src": "602:90:0"
+								},
+								{
+									"anonymous": false,
+									"documentation": {
+										"id": 37,
+										"nodeType": "StructuredDocumentation",
+										"src": "698:64:0",
+										"text": "@dev Emitted when contract admin updates rewardsPerUnitTime."
+									},
+									"id": 45,
+									"name": "UpdatedRewardsPerUnitTime",
+									"nameLocation": "773:25:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 44,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 39,
+												"indexed": true,
+												"mutability": "mutable",
+												"name": "_tokenId",
+												"nameLocation": "824:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 45,
+												"src": "808:24:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 38,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "808:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 41,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "oldRewardsPerUnitTime",
+												"nameLocation": "850:21:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 45,
+												"src": "842:29:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 40,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "842:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 43,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "newRewardsPerUnitTime",
+												"nameLocation": "889:21:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 45,
+												"src": "881:29:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 42,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "881:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "798:118:0"
+									},
+									"src": "767:150:0"
+								},
+								{
+									"anonymous": false,
+									"documentation": {
+										"id": 46,
+										"nodeType": "StructuredDocumentation",
+										"src": "923:54:0",
+										"text": "@dev Emitted when contract admin updates timeUnit."
+									},
+									"id": 52,
+									"name": "UpdatedDefaultTimeUnit",
+									"nameLocation": "988:22:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 51,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 48,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "oldTimeUnit",
+												"nameLocation": "1019:11:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 52,
+												"src": "1011:19:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 47,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1011:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 50,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "newTimeUnit",
+												"nameLocation": "1040:11:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 52,
+												"src": "1032:19:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 49,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1032:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1010:42:0"
+									},
+									"src": "982:71:0"
+								},
+								{
+									"anonymous": false,
+									"documentation": {
+										"id": 53,
+										"nodeType": "StructuredDocumentation",
+										"src": "1059:64:0",
+										"text": "@dev Emitted when contract admin updates rewardsPerUnitTime."
+									},
+									"id": 59,
+									"name": "UpdatedDefaultRewardsPerUnitTime",
+									"nameLocation": "1134:32:0",
+									"nodeType": "EventDefinition",
+									"parameters": {
+										"id": 58,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 55,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "oldRewardsPerUnitTime",
+												"nameLocation": "1175:21:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 59,
+												"src": "1167:29:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 54,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1167:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 57,
+												"indexed": false,
+												"mutability": "mutable",
+												"name": "newRewardsPerUnitTime",
+												"nameLocation": "1206:21:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 59,
+												"src": "1198:29:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 56,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "1198:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "1166:62:0"
+									},
+									"src": "1128:101:0"
+								},
+								{
+									"canonicalName": "IStaking1155.Staker",
+									"id": 68,
+									"members": [
+										{
+											"constant": false,
+											"id": 61,
+											"mutability": "mutable",
+											"name": "amountStaked",
+											"nameLocation": "1678:12:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 68,
+											"src": "1670:20:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 60,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "1670:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 63,
+											"mutability": "mutable",
+											"name": "timeOfLastUpdate",
+											"nameLocation": "1708:16:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 68,
+											"src": "1700:24:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 62,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "1700:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 65,
+											"mutability": "mutable",
+											"name": "unclaimedRewards",
+											"nameLocation": "1742:16:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 68,
+											"src": "1734:24:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 64,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "1734:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 67,
+											"mutability": "mutable",
+											"name": "conditionIdOflastUpdate",
+											"nameLocation": "1776:23:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 68,
+											"src": "1768:31:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 66,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "1768:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										}
+									],
+									"name": "Staker",
+									"nameLocation": "1653:6:0",
+									"nodeType": "StructDefinition",
+									"scope": 121,
+									"src": "1646:160:0",
+									"visibility": "public"
+								},
+								{
+									"canonicalName": "IStaking1155.StakerTiers",
+									"id": 77,
+									"members": [
+										{
+											"constant": false,
+											"id": 70,
+											"mutability": "mutable",
+											"name": "maxRewards",
+											"nameLocation": "1853:10:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 77,
+											"src": "1845:18:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 69,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "1845:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 72,
+											"mutability": "mutable",
+											"name": "amountStaked",
+											"nameLocation": "1881:12:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 77,
+											"src": "1873:20:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 71,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "1873:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 74,
+											"mutability": "mutable",
+											"name": "stakeTime",
+											"nameLocation": "1911:9:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 77,
+											"src": "1903:17:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 73,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "1903:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 76,
+											"mutability": "mutable",
+											"name": "stakeEndTime",
+											"nameLocation": "1938:12:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 77,
+											"src": "1930:20:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 75,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "1930:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										}
+									],
+									"name": "StakerTiers",
+									"nameLocation": "1823:11:0",
+									"nodeType": "StructDefinition",
+									"scope": 121,
+									"src": "1816:141:0",
+									"visibility": "public"
+								},
+								{
+									"canonicalName": "IStaking1155.StakingCondition",
+									"id": 86,
+									"members": [
+										{
+											"constant": false,
+											"id": 79,
+											"mutability": "mutable",
+											"name": "timeUnit",
+											"nameLocation": "2785:8:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 86,
+											"src": "2777:16:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 78,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "2777:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 81,
+											"mutability": "mutable",
+											"name": "rewardsPerUnitTime",
+											"nameLocation": "2811:18:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 86,
+											"src": "2803:26:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 80,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "2803:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 83,
+											"mutability": "mutable",
+											"name": "startTimestamp",
+											"nameLocation": "2847:14:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 86,
+											"src": "2839:22:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 82,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "2839:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										},
+										{
+											"constant": false,
+											"id": 85,
+											"mutability": "mutable",
+											"name": "endTimestamp",
+											"nameLocation": "2879:12:0",
+											"nodeType": "VariableDeclaration",
+											"scope": 86,
+											"src": "2871:20:0",
+											"stateVariable": false,
+											"storageLocation": "default",
+											"typeDescriptions": {
+												"typeIdentifier": "t_uint256",
+												"typeString": "uint256"
+											},
+											"typeName": {
+												"id": 84,
+												"name": "uint256",
+												"nodeType": "ElementaryTypeName",
+												"src": "2871:7:0",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												}
+											},
+											"visibility": "internal"
+										}
+									],
+									"name": "StakingCondition",
+									"nameLocation": "2750:16:0",
+									"nodeType": "StructDefinition",
+									"scope": 121,
+									"src": "2743:155:0",
+									"visibility": "public"
+								},
+								{
+									"documentation": {
+										"id": 87,
+										"nodeType": "StructuredDocumentation",
+										"src": "2904:149:0",
+										"text": "  @notice Stake ERC721 Tokens.\n  @param tokenId   ERC1155 token-id to stake.\n  @param amount    Amount to stake."
+									},
+									"functionSelector": "7b0472f0",
+									"id": 94,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "stake",
+									"nameLocation": "3067:5:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 92,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 89,
+												"mutability": "mutable",
+												"name": "tokenId",
+												"nameLocation": "3081:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 94,
+												"src": "3073:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 88,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "3073:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 91,
+												"mutability": "mutable",
+												"name": "amount",
+												"nameLocation": "3098:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 94,
+												"src": "3090:14:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 90,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "3090:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3072:33:0"
+									},
+									"returnParameters": {
+										"id": 93,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3114:0:0"
+									},
+									"scope": 121,
+									"src": "3058:57:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 95,
+										"nodeType": "StructuredDocumentation",
+										"src": "3121:158:0",
+										"text": "  @notice Withdraw staked tokens.\n  @param tokenId   ERC1155 token-id to withdraw.\n  @param amount    Amount to withdraw."
+									},
+									"functionSelector": "441a3e70",
+									"id": 102,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "withdraw",
+									"nameLocation": "3293:8:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 100,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 97,
+												"mutability": "mutable",
+												"name": "tokenId",
+												"nameLocation": "3310:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 102,
+												"src": "3302:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 96,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "3302:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 99,
+												"mutability": "mutable",
+												"name": "amount",
+												"nameLocation": "3327:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 102,
+												"src": "3319:14:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 98,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "3319:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3301:33:0"
+									},
+									"returnParameters": {
+										"id": 101,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3343:0:0"
+									},
+									"scope": 121,
+									"src": "3284:60:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 103,
+										"nodeType": "StructuredDocumentation",
+										"src": "3350:103:0",
+										"text": "  @notice Claim accumulated rewards.\n  @param tokenId   Staked token Id."
+									},
+									"functionSelector": "0962ef79",
+									"id": 108,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "claimRewards",
+									"nameLocation": "3467:12:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 106,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 105,
+												"mutability": "mutable",
+												"name": "tokenId",
+												"nameLocation": "3488:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 108,
+												"src": "3480:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 104,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "3480:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3479:17:0"
+									},
+									"returnParameters": {
+										"id": 107,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "3505:0:0"
+									},
+									"scope": 121,
+									"src": "3458:48:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"documentation": {
+										"id": 109,
+										"nodeType": "StructuredDocumentation",
+										"src": "3512:191:0",
+										"text": "  @notice View amount staked and total rewards for a user.\n  @param tokenId   Staked token Id.\n  @param staker    Address for which to calculated rewards."
+									},
+									"functionSelector": "168fb5c5",
+									"id": 120,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "getStakeInfoForToken",
+									"nameLocation": "3717:20:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 114,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 111,
+												"mutability": "mutable",
+												"name": "tokenId",
+												"nameLocation": "3746:7:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 120,
+												"src": "3738:15:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 110,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "3738:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 113,
+												"mutability": "mutable",
+												"name": "staker",
+												"nameLocation": "3763:6:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 120,
+												"src": "3755:14:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 112,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "3755:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3737:33:0"
+									},
+									"returnParameters": {
+										"id": 119,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 116,
+												"mutability": "mutable",
+												"name": "_tokensStaked",
+												"nameLocation": "3826:13:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 120,
+												"src": "3818:21:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 115,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "3818:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 118,
+												"mutability": "mutable",
+												"name": "_rewards",
+												"nameLocation": "3849:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 120,
+												"src": "3841:16:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 117,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "3841:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "3817:41:0"
+									},
+									"scope": 121,
+									"src": "3708:151:0",
+									"stateMutability": "view",
+									"virtual": false,
+									"visibility": "external"
+								}
+							],
+							"scope": 122,
+							"src": "87:3774:0",
+							"usedErrors": []
+						}
+					],
+					"src": "39:3823:0"
+				},
+				"id": 0
+			}
+		}
+	}
+}
